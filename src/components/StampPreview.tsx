@@ -1,5 +1,5 @@
 import type { ReactNode, RefObject } from 'react';
-import { useRef } from 'react';
+import { useRef, memo } from 'react';
 import { CANVAS_SIZE } from '../constants';
 import { Card, GlowBox } from './ui';
 import type { StampConfig } from '../types';
@@ -11,7 +11,7 @@ interface StampPreviewProps {
   children?: ReactNode;
 }
 
-export const StampPreview = ({ canvasRef, config, children }: StampPreviewProps) => {
+export const StampPreview = memo(({ canvasRef, config, children }: StampPreviewProps) => {
   const previewRef = useRef<HTMLCanvasElement>(null);
   usePreviewSync(canvasRef, previewRef, config);
 
@@ -56,4 +56,4 @@ export const StampPreview = ({ canvasRef, config, children }: StampPreviewProps)
       </Card>
     </aside>
   );
-};
+});

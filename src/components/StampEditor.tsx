@@ -1,6 +1,8 @@
+import { memo, useCallback, useMemo } from 'react';
 import type { StampConfig } from '../types';
 import { TEXT_MAX_LENGTH, COLOR_PRESETS, FONT_OPTIONS, type ColorPreset } from '../constants';
 import { Card, Label, Input, Textarea, Select, RangeSlider, ColorPicker } from './ui';
+import { isValidHexColor } from '../utils/validation';
 
 interface StampEditorProps {
   config: StampConfig;
@@ -8,7 +10,17 @@ interface StampEditorProps {
   onPresetClick: (preset: ColorPreset) => void;
 }
 
-export const StampEditor = ({ config, onConfigChange, onPresetClick }: StampEditorProps) => {
+export const StampEditor = memo(({ config, onConfigChange, onPresetClick }: StampEditorProps) => {
+  const handleColorChange = useCallback(
+    (key: 'textColor' | 'backgroundColor', value: string) => {
+      onConfigChange(key, value);
+    },
+    [onConfigChange]
+  );
+
+  const isTextColorValid = useMemo(() => isValidHexColor(config.textColor), [config.textColor]);
+  const isBgColorValid = useMemo(() => isValidHexColor(config.backgroundColor), [config.backgroundColor]);
+
   return (
     <div className="lg:col-span-2 space-y-4">
       <Card>
@@ -89,15 +101,21 @@ export const StampEditor = ({ config, onConfigChange, onPresetClick }: StampEdit
               <ColorPicker
                 id="text-color"
                 value={config.textColor}
-                onChange={(e) => onConfigChange('textColor', e.target.value)}
+                onChange={(e) => handleColorChange('textColor', e.target.value)}
               />
-              <Input
-                type="text"
-                value={config.textColor}
-                onChange={(e) => onConfigChange('textColor', e.target.value)}
-                className="flex-1 font-mono text-xs"
-                placeholder="#ffffff"
-              />
+              <div className="flex-1">
+                <Input
+                  type="text"
+                  value={config.textColor}
+                  onChange={(e) => handleColorChange('textColor', e.target.value)}
+                  className={`w-full font-mono text-xs ${!isTextColorValid ? 'ring-2 ring-red-400' : ''}`}
+                  placeholder="#ffffff"
+                  aria-invalid={!isTextColorValid}
+                />
+                {!isTextColorValid && (
+                  <p className="text-xs text-red-500 mt-1">Invalid hex color</p>
+                )}
+              </div>
             </div>
           </div>
 
@@ -108,19 +126,25 @@ export const StampEditor = ({ config, onConfigChange, onPresetClick }: StampEdit
                 id="bg-color"
                 variant="secondary"
                 value={config.backgroundColor}
-                onChange={(e) => onConfigChange('backgroundColor', e.target.value)}
+                onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
               />
-              <Input
-                type="text"
-                value={config.backgroundColor}
-                onChange={(e) => onConfigChange('backgroundColor', e.target.value)}
-                className="flex-1 font-mono text-xs"
-                placeholder="#10B981"
-              />
+              <div className="flex-1">
+                <Input
+                  type="text"
+                  value={config.backgroundColor}
+                  onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
+                  className={`w-full font-mono text-xs ${!isBgColorValid ? 'ring-2 ring-red-400' : ''}`}
+                  placeholder="#10B981"
+                  aria-invalid={!isBgColorValid}
+                />
+                {!isBgColorValid && (
+                  <p className="text-xs text-red-500 mt-1">Invalid hex color</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </Card>
     </div>
   );
-};
+});

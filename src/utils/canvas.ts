@@ -8,6 +8,7 @@ import {
   MIN_FONT_SIZE,
   FONT_SIZE_STEP,
 } from '../constants';
+import { sanitizeColor } from './validation';
 
 export const getMaxTextWidth = (ctx: CanvasRenderingContext2D, lines: string[]): number => {
   return Math.max(...lines.map(line => ctx.measureText(line).width));
@@ -65,17 +66,27 @@ export const renderTextOnCanvas = (
 
 export const drawStamp = (canvas: HTMLCanvasElement, config: StampConfig): void => {
   const ctx = canvas.getContext('2d');
-  if (!ctx) return;
+  if (!ctx) {
+    console.warn('Failed to get 2d context from canvas');
+    return;
+  }
 
-  ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-  ctx.fillStyle = config.backgroundColor;
-  ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  try {
+    ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    ctx.fillStyle = sanitizeColor(config.backgroundColor, '#10B981');
+    ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-  const lines = config.text.split('\n');
-  const optimalFontSize = calculateOptimalFontSize(ctx, lines, config.fontSize, config.fontFamily);
+    if (!config.text.trim()) return;
 
-  ctx.font = `bold ${optimalFontSize}px ${config.fontFamily}`;
-  renderTextOnCanvas(ctx, lines, optimalFontSize, config.textColor);
+    const allLines = config.text.split('\n');
+    const lines = allLines.filter((line) => line.length > 0 || allLines.length === 1);
+    const optimalFontSize = calculateOptimalFontSize(ctx, lines, config.fontSize, config.fontFamily);
+
+    ctx.font = `bold ${optimalFontSize}px ${config.fontFamily}`;
+    renderTextOnCanvas(ctx, lines, optimalFontSize, sanitizeColor(config.textColor, '#FFFFFF'));
+  } catch (error) {
+    console.error('Error drawing stamp:', error);
+  }
 };
 
 export const generateStampFilename = (text: string): string => {

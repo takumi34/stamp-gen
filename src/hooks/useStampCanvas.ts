@@ -4,12 +4,22 @@ import { drawStamp } from '../utils/canvas';
 
 export const useStampCanvas = (config: StampConfig) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    drawStamp(canvas, config);
+    if (rafIdRef.current !== null) cancelAnimationFrame(rafIdRef.current);
+
+    rafIdRef.current = requestAnimationFrame(() => {
+      drawStamp(canvas, config);
+      rafIdRef.current = null;
+    });
+
+    return () => {
+      if (rafIdRef.current !== null) cancelAnimationFrame(rafIdRef.current);
+    };
   }, [config]);
 
   return { canvasRef };

@@ -10,18 +10,32 @@ interface DownloadButtonProps {
 export const DownloadButton = ({ canvasRef, stampText }: DownloadButtonProps) => {
   const handleDownload = () => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {
+      console.error('Canvas reference is not available');
+      return;
+    }
 
-    canvas.toBlob((blob) => {
-      if (!blob) return;
+    try {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          console.error('Failed to generate blob from canvas');
+          return;
+        }
 
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.download = generateStampFilename(stampText);
-      link.href = url;
-      link.click();
-      URL.revokeObjectURL(url);
-    });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = generateStampFilename(stampText);
+        link.href = url;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        setTimeout(() => URL.revokeObjectURL(url), 100);
+      }, 'image/png');
+    } catch (error) {
+      console.error('Error downloading stamp:', error);
+    }
   };
 
   return (
