@@ -2,6 +2,8 @@
 
 A web-based tool for creating custom Slack emoji stamps (128×128px PNG images)
 
+**Demo**: https://takumi34.github.io/stamp-gen/
+
 ### Tech Stack
 
 - React 19 with TypeScript
