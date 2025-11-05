@@ -1,0 +1,25 @@
+@reference "../index.css";
+
+@layer components {
+  .range-slider {
+    @apply w-full h-2 rounded-lg appearance-none cursor-pointer;
+    @apply bg-gradient-to-r from-indigo-200 to-purple-200;
+  }
+
+  .range-slider::-webkit-slider-thumb {
+    @apply appearance-none w-4 h-4 rounded-full cursor-pointer;
+    @apply bg-gradient-to-br from-indigo-500 to-purple-600;
+    @apply shadow-md hover:scale-110 transition-transform;
+  }
+
+  .range-slider::-moz-range-thumb {
+    @apply w-4 h-4 rounded-full cursor-pointer border-0;
+    @apply bg-gradient-to-br from-indigo-500 to-purple-600;
+    @apply shadow-md hover:scale-110 transition-transform;
+  }
+
+  textarea::placeholder {
+    color: #9ca3af;
+    opacity: 1;
+  }
+}
