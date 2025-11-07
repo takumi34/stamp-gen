@@ -16,14 +16,17 @@ export interface ColorPreset {
 }
 
 export const COLOR_PRESETS: readonly ColorPreset[] = [
+  { name: 'Red', bg: '#EF4444', text: '#ffffff' },
+  { name: 'Pure Red', bg: '#FF0000', text: '#ffffff' },
+  { name: 'Pink', bg: '#EC4899', text: '#ffffff' },
+  { name: 'Yellow', bg: '#F59E0B', text: '#ffffff' },
   { name: 'Green', bg: '#10B981', text: '#ffffff' },
   { name: 'Blue', bg: '#3B82F6', text: '#ffffff' },
-  { name: 'Purple', bg: '#8B5CF6', text: '#ffffff' },
-  { name: 'Red', bg: '#EF4444', text: '#ffffff' },
-  { name: 'Yellow', bg: '#F59E0B', text: '#ffffff' },
-  { name: 'Pink', bg: '#EC4899', text: '#ffffff' },
   { name: 'Indigo', bg: '#6366F1', text: '#ffffff' },
+  { name: 'Purple', bg: '#8B5CF6', text: '#ffffff' },
+  { name: 'White', bg: '#FFFFFF', text: '#000000' },
   { name: 'Gray', bg: '#6B7280', text: '#ffffff' },
+  { name: 'Black', bg: '#000000', text: '#ffffff' },
 ] as const;
 
 // Font options

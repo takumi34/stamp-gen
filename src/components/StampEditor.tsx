@@ -74,7 +74,7 @@ export const StampEditor = memo(({ config, onConfigChange, onPresetClick }: Stam
 
       <Card>
         <Label>Color Presets</Label>
-        <div className="grid grid-cols-8 gap-2">
+        <div className="grid grid-cols-11 gap-2">
           {COLOR_PRESETS.map((preset) => (
             <button
               key={preset.name}
